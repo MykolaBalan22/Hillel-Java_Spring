@@ -17,7 +17,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public Order getCertainOrder(@RequestBody Integer id){
+    public Order getCertainOrder(@PathVariable Integer id){
         return service.getOrderById(id);
     }
     @GetMapping
