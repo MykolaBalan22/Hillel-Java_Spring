@@ -19,9 +19,9 @@ public class ProductRepository {
     }
     public List<Product> getProductsByCertainOrder(int orderId){
         String getQuery = """
-                "SELECT products.*  FROM products 
-                inner join order_products on id=order_products.prod_id
-                 where order_products.order_id="
+                SELECT products.id ,products.name ,products.cost  FROM products 
+                inner join order_products on products.id=order_products.prod_id
+                 where order_products.order_id=
                 """;
         return jdbcTemplate.query(getQuery+orderId ,new ProductMapper());
     }
