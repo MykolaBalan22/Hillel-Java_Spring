@@ -24,7 +24,7 @@ public class OrderController {
     public List<Order> getOrderList(){
         return service.getAllOrders();
     }
-    @PostMapping("/save")
+    @PostMapping
     public Order insertNewOrder(@RequestBody Order order){
         return service.addOrder(order);
     }

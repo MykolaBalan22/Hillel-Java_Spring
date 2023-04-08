@@ -1,24 +1,30 @@
 package com.example.glovo.services;
 
 import com.example.glovo.models.Order;
+import com.example.glovo.repositories.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class OrderService {
-    private final List<Order> ordersStorage =new ArrayList<>();
+    private final OrderRepository orderRepository;
+
+    @Autowired
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
     public Order getOrderById(int id) {
-        return ordersStorage.stream().filter(order->order.getId()==id).findFirst().orElseThrow();
+        return null;
     }
 
     public List<Order> getAllOrders() {
-        return ordersStorage;
+        return null;
     }
 
     public Order addOrder(Order order) {
-         ordersStorage.add(order);
-         return order;
+        return null;
     }
 }
