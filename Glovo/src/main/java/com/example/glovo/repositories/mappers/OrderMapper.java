@@ -11,7 +11,7 @@ public class OrderMapper implements RowMapper<Order> {
     public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Order.builder()
                 .id(rs.getInt(1))
-                .date(rs.getDate(2))
+                .date(rs.getDate(2).toLocalDate())
                 .cost(rs.getDouble(3))
                 .build();
     }

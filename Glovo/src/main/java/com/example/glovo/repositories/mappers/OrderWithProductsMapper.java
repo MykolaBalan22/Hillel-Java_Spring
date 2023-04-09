@@ -14,13 +14,13 @@ public class OrderWithProductsMapper implements RowMapper<Order> {
     public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
         List<Product> product = new ArrayList<>();
         product.add(Product.builder()
-                .id(rs.getInt(1))
-                .name(rs.getString(2))
-                .cost(rs.getDouble(3))
+                .id(rs.getInt(4))
+                .name(rs.getString(5))
+                .cost(rs.getDouble(6))
                 .build());
         return Order.builder()
                 .id(rs.getInt(1))
-                .date(rs.getDate(2))
+                .date(rs.getDate(2).toLocalDate())
                 .cost(rs.getDouble(3))
                 .products(product)
                 .build();
