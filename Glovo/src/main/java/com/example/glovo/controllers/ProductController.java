@@ -28,7 +28,7 @@ public class ProductController {
         return productService.changeProduct(product);
     }
     @DeleteMapping
-    public Product deleteProduct(@RequestBody Product product){
+    public boolean deleteProduct(@RequestBody Product product){
         return productService.removeProduct(product);
     }
 }

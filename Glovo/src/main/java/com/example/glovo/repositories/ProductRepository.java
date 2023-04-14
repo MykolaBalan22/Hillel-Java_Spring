@@ -1,5 +1,7 @@
 package com.example.glovo.repositories;
 
+import com.example.glovo.repositories.statements.DeleteProductsStatement;
+import com.example.glovo.repositories.statements.SelectProductsStatments;
 import com.example.glovo.models.Product;
 import com.example.glovo.repositories.mappers.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -44,15 +45,25 @@ public class ProductRepository {
     }
 
     public Product get(int id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM products where id=" + id, new ProductMapper());
-    }
-
-    public Product add(Product product) {
-        jdbcTemplate.execute("INSERT INTO products(id ,name,cost ) value("+product.getId()+",\'"+product.getName()+"\',"+product.getCost()+")");
         try {
-            return get(product.getId());
+            return jdbcTemplate.queryForObject("SELECT * FROM products where id=" + id, new ProductMapper());
         } catch (EmptyResultDataAccessException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found", ex);
         }
+    }
+
+    public Product add(Product product) {
+        jdbcTemplate.execute("INSERT INTO products(id ,name,cost ) value(" + product.getId() + ",\'" + product.getName() + "\'," + product.getCost() + ")");
+        return get(product.getId());
+    }
+
+    public boolean remove(int id) {
+        int countDeletedProducts = jdbcTemplate.execute("DELETE from products WHERE id=" + id, new DeleteProductsStatement());
+            return countDeletedProducts == 1;
+    }
+    public boolean removeCertainProductForAllOrders(int productId){
+        int countInOrders = jdbcTemplate.execute("SELECT count(*)  from order_products WHERE prod_id=" + productId, new SelectProductsStatments());
+        int deletedInOrders = jdbcTemplate.execute("DELETE from order_products WHERE prod_id=" + productId, new DeleteProductsStatement());
+        return countInOrders==deletedInOrders;
     }
 }

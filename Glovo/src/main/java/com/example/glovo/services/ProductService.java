@@ -15,17 +15,23 @@ public class ProductService {
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
-    public Product getProductById(int id){
+
+    public Product getProductById(int id) {
         return productRepository.get(id);
     }
-    public Product addProduct(Product product){
+
+    public Product addProduct(Product product) {
         product.setId(ThreadLocalRandom.current().nextInt(1, 20000));
         return productRepository.add(product);
     }
-    public Product changeProduct(Product product){
+
+    public Product changeProduct(Product product) {
         return null;
     }
-    public Product  removeProduct(Product product){
-        return null;
+
+    public boolean removeProduct(Product product) {
+        boolean deletedInAllOrers = productRepository.removeCertainProductForAllOrders(product.getId());
+        boolean deletedInProducts = productRepository.remove(product.getId());
+        return deletedInProducts && deletedInAllOrers;
     }
 }
