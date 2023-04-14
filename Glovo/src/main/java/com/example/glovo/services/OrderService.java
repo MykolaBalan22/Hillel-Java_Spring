@@ -49,4 +49,14 @@ public class OrderService {
         savedOrder.setProducts(savedProductList);
         return savedOrder;
     }
+
+    public Order updateOrder(Order order) {
+        return null;
+    }
+
+    public boolean removeOrder(Order order) {
+        boolean deletedInAllOrdersWithProducts = orderRepository.removeOrderWithProducts(order.getId());
+        boolean deletedInOrders = orderRepository.remove(order.getId());
+        return deletedInOrders && deletedInAllOrdersWithProducts;
+    }
 }

@@ -28,5 +28,13 @@ public class OrderController {
     public Order insertNewOrder(@RequestBody Order order){
         return service.addOrder(order);
     }
+    @PutMapping
+    public Order changeOrder(@RequestBody Order order){
+        return service.updateOrder(order);
+    }
+    @DeleteMapping
+    public boolean deleteOrder(@RequestBody Order order){
+        return service.removeOrder(order);
+    }
 
 }

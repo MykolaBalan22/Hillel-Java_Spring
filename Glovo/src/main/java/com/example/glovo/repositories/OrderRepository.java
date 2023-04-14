@@ -3,7 +3,8 @@ package com.example.glovo.repositories;
 import com.example.glovo.models.Order;
 import com.example.glovo.repositories.mappers.OrderMapper;
 import com.example.glovo.repositories.mappers.OrderWithProductsMapper;
-import com.example.glovo.repositories.mappers.ProductMapper;
+import com.example.glovo.repositories.statements.CountStatment;
+import com.example.glovo.repositories.statements.DeleteStatement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -43,5 +44,15 @@ public class OrderRepository {
         } catch (EmptyResultDataAccessException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found", ex);
         }
+    }
+    public boolean removeOrderWithProducts (int orderId){
+        int countInOrdersWithProducts = jdbcTemplate.execute("SELECT count(*)  from order_products WHERE order_id=" + orderId, new CountStatment());
+        int deletedInOrdersWithProducts = jdbcTemplate.execute("DELETE from order_products WHERE order_id=" + orderId, new DeleteStatement());
+        return countInOrdersWithProducts==deletedInOrdersWithProducts;
+    }
+
+    public boolean remove(int id) {
+        int countDeletedOrders = jdbcTemplate.execute("DELETE from orders WHERE id=" + id, new DeleteStatement());
+        return countDeletedOrders == 1;
     }
 }

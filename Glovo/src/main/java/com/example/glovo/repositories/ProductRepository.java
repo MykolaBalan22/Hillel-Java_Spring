@@ -1,7 +1,7 @@
 package com.example.glovo.repositories;
 
-import com.example.glovo.repositories.statements.DeleteProductsStatement;
-import com.example.glovo.repositories.statements.CountProductsStatments;
+import com.example.glovo.repositories.statements.DeleteStatement;
+import com.example.glovo.repositories.statements.CountStatment;
 import com.example.glovo.models.Product;
 import com.example.glovo.repositories.mappers.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,12 +58,12 @@ public class ProductRepository {
     }
 
     public boolean remove(int id) {
-        int countDeletedProducts = jdbcTemplate.execute("DELETE from products WHERE id=" + id, new DeleteProductsStatement());
+        int countDeletedProducts = jdbcTemplate.execute("DELETE from products WHERE id=" + id, new DeleteStatement());
             return countDeletedProducts == 1;
     }
     public boolean removeCertainProductForAllOrders(int productId){
-        int countInOrders = jdbcTemplate.execute("SELECT count(*)  from order_products WHERE prod_id=" + productId, new CountProductsStatments());
-        int deletedInOrders = jdbcTemplate.execute("DELETE from order_products WHERE prod_id=" + productId, new DeleteProductsStatement());
+        int countInOrders = jdbcTemplate.execute("SELECT count(*)  from order_products WHERE prod_id=" + productId, new CountStatment());
+        int deletedInOrders = jdbcTemplate.execute("DELETE from order_products WHERE prod_id=" + productId, new DeleteStatement());
         return countInOrders==deletedInOrders;
     }
     public Product update(Product product){
