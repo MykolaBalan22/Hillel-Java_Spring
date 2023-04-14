@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class ProductService {
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public ProductService(ProductRepository productRepository) {
@@ -26,7 +26,7 @@ public class ProductService {
     }
 
     public Product changeProduct(Product product) {
-        return null;
+        return productRepository.update(product);
     }
 
     public boolean removeProduct(Product product) {

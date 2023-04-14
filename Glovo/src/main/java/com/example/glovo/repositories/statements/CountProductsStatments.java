@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SelectProductsStatments implements PreparedStatementCallback<Integer> {
+public class CountProductsStatments implements PreparedStatementCallback<Integer> {
 
     @Override
     public Integer doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {

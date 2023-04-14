@@ -1,7 +1,7 @@
 package com.example.glovo.repositories;
 
 import com.example.glovo.repositories.statements.DeleteProductsStatement;
-import com.example.glovo.repositories.statements.SelectProductsStatments;
+import com.example.glovo.repositories.statements.CountProductsStatments;
 import com.example.glovo.models.Product;
 import com.example.glovo.repositories.mappers.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +62,12 @@ public class ProductRepository {
             return countDeletedProducts == 1;
     }
     public boolean removeCertainProductForAllOrders(int productId){
-        int countInOrders = jdbcTemplate.execute("SELECT count(*)  from order_products WHERE prod_id=" + productId, new SelectProductsStatments());
+        int countInOrders = jdbcTemplate.execute("SELECT count(*)  from order_products WHERE prod_id=" + productId, new CountProductsStatments());
         int deletedInOrders = jdbcTemplate.execute("DELETE from order_products WHERE prod_id=" + productId, new DeleteProductsStatement());
         return countInOrders==deletedInOrders;
+    }
+    public Product update(Product product){
+        jdbcTemplate.update("UPDATE products set name=\'"+product.getName()+"\' ,cost="+product.getCost()+" where id="+product.getId());
+        return get(product.getId());
     }
 }
