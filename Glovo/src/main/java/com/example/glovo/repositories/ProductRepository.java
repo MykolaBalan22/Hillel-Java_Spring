@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,8 +30,7 @@ public class ProductRepository {
                 """;
         try {
             return jdbcTemplate.query(getQuery + orderId, new ProductMapper());
-        } catch (
-                EmptyResultDataAccessException ex) {
+        } catch (EmptyResultDataAccessException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found", ex);
         }
     }
@@ -41,5 +41,18 @@ public class ProductRepository {
             jdbcTemplate.execute(queryForInsert + "(" + id + "," + integer + ",\'" + LocalDate.now() + "\');");
         }
         return getProductsByCertainOrder(id);
+    }
+
+    public Product get(int id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM products where id=" + id, new ProductMapper());
+    }
+
+    public Product add(Product product) {
+        jdbcTemplate.execute("INSERT INTO products(id ,name,cost ) value("+product.getId()+",\'"+product.getName()+"\',"+product.getCost()+")");
+        try {
+            return get(product.getId());
+        } catch (EmptyResultDataAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found", ex);
+        }
     }
 }

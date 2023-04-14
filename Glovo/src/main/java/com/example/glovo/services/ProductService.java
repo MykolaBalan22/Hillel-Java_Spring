@@ -5,6 +5,8 @@ import com.example.glovo.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 @Service
 public class ProductService {
     private ProductRepository productRepository;
@@ -14,10 +16,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
     public Product getProductById(int id){
-        return null;
+        return productRepository.get(id);
     }
     public Product addProduct(Product product){
-        return null;
+        product.setId(ThreadLocalRandom.current().nextInt(1, 20000));
+        return productRepository.add(product);
     }
     public Product changeProduct(Product product){
         return null;
