@@ -1,6 +1,7 @@
 package com.example.glovo.controllers;
 
 import com.example.glovo.models.Product;
+import com.example.glovo.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,18 +17,18 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product getCertainProduct(@PathVariable int id){
-        return null;
+        return productService.getProductById(id);
     }
     @PostMapping
     public Product createProduct(@RequestBody  Product product){
-        return null;
+        return productService.addProduct(product);
     }
     @PutMapping
     public Product updateProduct(@RequestBody Product product){
-        return null;
+        return productService.changeProduct(product);
     }
     @DeleteMapping
     public Product deleteProduct(@RequestBody Product product){
-        return null;
+        return productService.removeProduct(product);
     }
 }
