@@ -51,7 +51,9 @@ public class OrderService {
     }
 
     public Order updateOrder(Order order) {
-        return null;
+        Order updatedOrder = orderRepository.update(order);
+        updatedOrder.setProducts(productRepository.updateProductsByCertainOrder(order.getId() ,order.getProducts().stream().map(Product::getId).toList()));
+        return updatedOrder;
     }
 
     public boolean removeOrder(Order order) {

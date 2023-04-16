@@ -24,7 +24,11 @@ public class OrderRepository {
     }
 
     public Order getOrder(int id) {
-        return jdbcTemplate.queryForObject("SELECT *  FROM orders WHERE id=" + id, new OrderMapper());
+        try {
+            return jdbcTemplate.queryForObject("SELECT *  FROM orders WHERE id=" + id, new OrderMapper());
+        } catch (EmptyResultDataAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found", ex);
+        }
     }
 
     public List<Order> getAllWithProduct() {
@@ -45,14 +49,20 @@ public class OrderRepository {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found", ex);
         }
     }
-    public boolean removeOrderWithProducts (int orderId){
+
+    public boolean removeOrderWithProducts(int orderId) {
         int countInOrdersWithProducts = jdbcTemplate.execute("SELECT count(*)  from order_products WHERE order_id=" + orderId, new CountStatment());
         int deletedInOrdersWithProducts = jdbcTemplate.execute("DELETE from order_products WHERE order_id=" + orderId, new DeleteStatement());
-        return countInOrdersWithProducts==deletedInOrdersWithProducts;
+        return countInOrdersWithProducts == deletedInOrdersWithProducts;
     }
 
     public boolean remove(int id) {
         int countDeletedOrders = jdbcTemplate.execute("DELETE from orders WHERE id=" + id, new DeleteStatement());
         return countDeletedOrders == 1;
+    }
+
+    public Order update(Order order) {
+        jdbcTemplate.update("UPDATE orders set date=\'" + order.getDate() + "\' ,cost=" + order.getCost() + " where id=" + order.getId());
+        return getOrder(order.getId());
     }
 }

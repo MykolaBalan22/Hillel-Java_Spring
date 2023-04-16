@@ -1,9 +1,9 @@
 package com.example.glovo.repositories;
 
-import com.example.glovo.repositories.statements.DeleteStatement;
-import com.example.glovo.repositories.statements.CountStatment;
 import com.example.glovo.models.Product;
 import com.example.glovo.repositories.mappers.ProductMapper;
+import com.example.glovo.repositories.statements.CountStatment;
+import com.example.glovo.repositories.statements.DeleteStatement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -39,7 +39,7 @@ public class ProductRepository {
     public List<Product> addProductsForOrder(int id, List<Integer> list) {
         String queryForInsert = "INSERT INTO order_products (order_id,prod_id,created_date) value";
         for (Integer integer : list) {
-            jdbcTemplate.execute(queryForInsert + "(" + id + "," + integer + ",\'" + LocalDate.now() + "\');");
+            jdbcTemplate.execute(queryForInsert + "(" + id + "," + integer + ",\'" + LocalDate.now() + "\')");
         }
         return getProductsByCertainOrder(id);
     }
@@ -59,15 +59,30 @@ public class ProductRepository {
 
     public boolean remove(int id) {
         int countDeletedProducts = jdbcTemplate.execute("DELETE from products WHERE id=" + id, new DeleteStatement());
-            return countDeletedProducts == 1;
+        return countDeletedProducts == 1;
     }
-    public boolean removeCertainProductForAllOrders(int productId){
+
+    public boolean removeCertainProductForAllOrders(int productId) {
         int countInOrders = jdbcTemplate.execute("SELECT count(*)  from order_products WHERE prod_id=" + productId, new CountStatment());
         int deletedInOrders = jdbcTemplate.execute("DELETE from order_products WHERE prod_id=" + productId, new DeleteStatement());
-        return countInOrders==deletedInOrders;
+        return countInOrders == deletedInOrders;
     }
-    public Product update(Product product){
-        jdbcTemplate.update("UPDATE products set name=\'"+product.getName()+"\' ,cost="+product.getCost()+" where id="+product.getId());
+
+    public Product update(Product product) {
+        jdbcTemplate.update("UPDATE products set name=\'" + product.getName() + "\' ,cost=" + product.getCost() + " where id=" + product.getId());
         return get(product.getId());
+    }
+
+    public List<Product> updateProductsByCertainOrder(int orderId, List<Integer> list) {
+        removeAllProductsForOrder(orderId);
+        return addProductsForOrder(orderId, list);
+    }
+
+    private void removeAllProductsForOrder(int orderId) {
+        try {
+            jdbcTemplate.execute("DELETE from order_products WHERE order_id=" + orderId);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found", ex);
+        }
     }
 }

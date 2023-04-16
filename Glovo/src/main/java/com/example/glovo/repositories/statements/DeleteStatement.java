@@ -10,6 +10,5 @@ public class DeleteStatement implements PreparedStatementCallback<Integer> {
     @Override
     public Integer doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
         return ps.executeUpdate();
-
     }
 }
