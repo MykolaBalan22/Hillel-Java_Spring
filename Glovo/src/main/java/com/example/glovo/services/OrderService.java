@@ -49,4 +49,16 @@ public class OrderService {
         savedOrder.setProducts(savedProductList);
         return savedOrder;
     }
+
+    public Order updateOrder(Order order) {
+        Order updatedOrder = orderRepository.update(order);
+        updatedOrder.setProducts(productRepository.updateProductsByCertainOrder(order.getId() ,order.getProducts().stream().map(Product::getId).toList()));
+        return updatedOrder;
+    }
+
+    public boolean removeOrder(Order order) {
+        boolean deletedInAllOrdersWithProducts = orderRepository.removeOrderWithProducts(order.getId());
+        boolean deletedInOrders = orderRepository.remove(order.getId());
+        return deletedInOrders && deletedInAllOrdersWithProducts;
+    }
 }

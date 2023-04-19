@@ -11,22 +11,35 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrderController {
     private final OrderService service;
+
     @Autowired
     public OrderController(OrderService service) {
         this.service = service;
     }
 
     @GetMapping("/{id}")
-    public Order getCertainOrder(@PathVariable Integer id){
+    public Order getCertainOrder(@PathVariable Integer id) {
         return service.getOrderById(id);
     }
+
     @GetMapping
-    public List<Order> getOrderList(){
+    public List<Order> getOrderList() {
         return service.getAllOrders();
     }
+
     @PostMapping
-    public Order insertNewOrder(@RequestBody Order order){
+    public Order insertNewOrder(@RequestBody Order order) {
         return service.addOrder(order);
+    }
+
+    @PutMapping
+    public Order changeOrder(@RequestBody Order order) {
+        return service.updateOrder(order);
+    }
+
+    @DeleteMapping
+    public boolean deleteOrder(@RequestBody Order order) {
+        return service.removeOrder(order);
     }
 
 }
