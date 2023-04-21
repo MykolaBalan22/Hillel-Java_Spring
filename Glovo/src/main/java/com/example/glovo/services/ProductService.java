@@ -4,13 +4,10 @@ import com.example.glovo.entities.ProductEntity;
 import com.example.glovo.entities.converters.ProductEntityConverter;
 import com.example.glovo.models.Product;
 import com.example.glovo.repositories.ProductDataRepository;
-import com.example.glovo.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class ProductService {
@@ -31,13 +28,15 @@ public class ProductService {
         return ProductEntityConverter.productEntityToProduct(entity);
     }
 
-    //
-//    public Product changeProduct(Product product) {
-//        return productRepository.update(product);
-//    }
-//
+    public Product changeProduct(Product product) {
+        ProductEntity entity = productRepository.save(ProductEntityConverter.productToProductEntity(product));
+        return ProductEntityConverter.productEntityToProduct(entity);
+    }
+
     public boolean removeProduct(Product product) {
+        productRepository.deleteCertainProduct(product.getId());
+        int numberOfproducts = productRepository.countProductsByIdInOrderWithProducts(product.getId());
         productRepository.deleteById(product.getId());
-        return !productRepository.existsById(product.getId());
+        return (numberOfproducts==0)&&!productRepository.existsById(product.getId());
     }
 }
