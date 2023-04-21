@@ -24,14 +24,14 @@ public class ProductController {
     public Product createProduct(@RequestBody Product product) {
         return productService.addProduct(product);
     }
-
-    @PutMapping
-    public Product updateProduct(@RequestBody Product product) {
-        return productService.changeProduct(product);
-    }
-
-    @DeleteMapping
-    public boolean deleteProduct(@RequestBody Product product) {
-        return productService.removeProduct(product);
-    }
+//
+//    @PutMapping
+//    public Product updateProduct(@RequestBody Product product) {
+//        return productService.changeProduct(product);
+//    }
+//
+//    @DeleteMapping
+//    public boolean deleteProduct(@RequestBody Product product) {
+//        return productService.removeProduct(product);
+//    }
 }
