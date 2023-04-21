@@ -30,8 +30,8 @@ public class ProductController {
 //        return productService.changeProduct(product);
 //    }
 //
-//    @DeleteMapping
-//    public boolean deleteProduct(@RequestBody Product product) {
-//        return productService.removeProduct(product);
-//    }
+    @DeleteMapping
+    public boolean deleteProduct(@RequestBody Product product) {
+        return productService.removeProduct(product);
+    }
 }

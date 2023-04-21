@@ -7,8 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductDataRepository extends CrudRepository<ProductEntity,Integer> {
-//    @Query("INSERT INTO products(id ,name,cost ) value(:id  ,:Name ,:Cost)")
-//    public ProductEntity addProduct(@Param("id") int id ,@Param("Name") String name,@Param("Cost")double cost);
+public interface ProductDataRepository extends CrudRepository<ProductEntity, Integer> {
 
 }

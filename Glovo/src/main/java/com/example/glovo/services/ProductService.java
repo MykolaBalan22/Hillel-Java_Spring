@@ -30,14 +30,14 @@ public class ProductService {
         ProductEntity entity = productRepository.save(ProductEntityConverter.productToProductEntity(product));
         return ProductEntityConverter.productEntityToProduct(entity);
     }
-//
+
+    //
 //    public Product changeProduct(Product product) {
 //        return productRepository.update(product);
 //    }
 //
-//    public boolean removeProduct(Product product) {
-//        boolean deletedInAllOrers = productRepository.removeCertainProductForAllOrders(product.getId());
-//        boolean deletedInProducts = productRepository.remove(product.getId());
-//        return deletedInProducts && deletedInAllOrers;
-//    }
+    public boolean removeProduct(Product product) {
+        productRepository.deleteById(product.getId());
+        return !productRepository.existsById(product.getId());
+    }
 }
