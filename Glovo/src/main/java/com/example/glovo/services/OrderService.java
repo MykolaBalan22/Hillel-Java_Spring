@@ -10,6 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Consumer;
+
 @Service
 public class OrderService {
     private final OrderDataRepository orderRepository;
@@ -28,15 +33,15 @@ public class OrderService {
         return  OrderEntityConverter.orderEntityToOrder(entity ,productRepository.getProductEntityByCertainOrder(id));
     }
 
-//    public List<Order> getAllOrders() {
-//        Map<Integer, Order> orderMap = orderRepository.getAllWithProduct().stream()
-//                .collect(Collectors.toMap(
-//                        Order::getId, val -> val, (s1, s2) -> {
-//                            s2.getProducts().addAll(s1.getProducts());
-//                            return s2;
-//                        }));
-//        return orderMap.values().stream().toList();
-//    }
+    public List<Order> getAllOrders() {
+        Iterator<OrderEntity> iterator = orderRepository.findAll().iterator();
+        List<Order> orders= new ArrayList<>();
+        while (iterator.hasNext()) {
+            OrderEntity entity = iterator.next();
+            orders.add(OrderEntityConverter.orderEntityToOrder(entity,productRepository.getProductEntityByCertainOrder(entity.getId())));
+        }
+        return orders;
+    }
 //
 //    public Order addOrder(Order order) {
 //        order.setId(ThreadLocalRandom.current().nextInt(1, 20000));

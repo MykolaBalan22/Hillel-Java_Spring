@@ -22,10 +22,10 @@ public class OrderController {
         return service.getOrderById(id);
     }
 
-//    @GetMapping
-//    public List<Order> getOrderList() {
-//        return service.getAllOrders();
-//    }
+    @GetMapping
+    public List<Order> getOrderList() {
+        return service.getAllOrders();
+    }
 //
 //    @PostMapping
 //    public Order insertNewOrder(@RequestBody Order order) {
