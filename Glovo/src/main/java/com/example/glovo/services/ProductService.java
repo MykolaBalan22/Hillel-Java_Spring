@@ -3,6 +3,7 @@ package com.example.glovo.services;
 import com.example.glovo.entities.ProductEntity;
 import com.example.glovo.entities.converters.ProductEntityConverter;
 import com.example.glovo.models.Product;
+import com.example.glovo.repositories.OrderWithProductsRepository;
 import com.example.glovo.repositories.ProductDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,10 +13,12 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ProductService {
     private final ProductDataRepository productRepository;
+    private final OrderWithProductsRepository orderWithProductsRepository;
 
     @Autowired
-    public ProductService(ProductDataRepository productRepository) {
+    public ProductService(ProductDataRepository productRepository, OrderWithProductsRepository orderWithProductsRepository) {
         this.productRepository = productRepository;
+        this.orderWithProductsRepository = orderWithProductsRepository;
     }
 
     public Product getProductById(int id) {
@@ -34,9 +37,10 @@ public class ProductService {
     }
 
     public boolean removeProduct(Product product) {
-        productRepository.deleteCertainProduct(product.getId());
-        int numberOfproducts = productRepository.countProductsByIdInOrderWithProducts(product.getId());
+        orderWithProductsRepository.deleteCertainProduct(product.getId());
+        int numberOfproducts = orderWithProductsRepository.countProductsByIdInOrderWithProducts(product.getId());
         productRepository.deleteById(product.getId());
         return (numberOfproducts==0)&&!productRepository.existsById(product.getId());
     }
+
 }

@@ -3,10 +3,10 @@ package com.example.glovo.services;
 import com.example.glovo.entities.OrderEntity;
 import com.example.glovo.entities.ProductEntity;
 import com.example.glovo.entities.converters.OrderEntityConverter;
-import com.example.glovo.entities.converters.ProductEntityConverter;
 import com.example.glovo.models.Order;
 import com.example.glovo.models.Product;
 import com.example.glovo.repositories.OrderDataRepository;
+import com.example.glovo.repositories.OrderWithProductsRepository;
 import com.example.glovo.repositories.ProductDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,17 +17,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrderService {
     private final OrderDataRepository orderRepository;
-
+    private final OrderWithProductsRepository orderWithProductsRepository;
     private final ProductDataRepository productRepository;
 
     @Autowired
-    public OrderService(OrderDataRepository orderRepository, ProductDataRepository productRepository) {
+    public OrderService(OrderDataRepository orderRepository, OrderWithProductsRepository orderWithProductsRepository, ProductDataRepository productRepository) {
         this.orderRepository = orderRepository;
+        this.orderWithProductsRepository = orderWithProductsRepository;
         this.productRepository = productRepository;
     }
 
@@ -50,7 +50,7 @@ public class OrderService {
     public Order addOrder(Order order) {
         OrderEntity entity = orderRepository.save(OrderEntityConverter.orderToOrderEntity(order));
         for (Product product : order.getProducts()) {
-            productRepository.addProductByOrder(entity.getId(), product.getId(), LocalDate.now());
+            orderWithProductsRepository.addProductByOrder(entity.getId(), product.getId(), LocalDate.now());
         }
         List<ProductEntity> products = productRepository.getProductEntityByCertainOrder(entity.getId());
         return OrderEntityConverter.orderEntityToOrder(entity, products);
@@ -58,17 +58,17 @@ public class OrderService {
 
     public Order updateOrder(Order order) {
         OrderEntity changedOrderEntity = orderRepository.save(OrderEntityConverter.orderToOrderEntity(order));
-        productRepository.deleteProductsForOrder(order.getId());
+        orderWithProductsRepository.deleteProductsForOrder(order.getId());
         for (Product product : order.getProducts()) {
-            productRepository.addProductByOrder(order.getId(), product.getId(), LocalDate.now());
+            orderWithProductsRepository.addProductByOrder(order.getId(), product.getId(), LocalDate.now());
         }
         List<ProductEntity> products = productRepository.getProductEntityByCertainOrder(order.getId());
         return OrderEntityConverter.orderEntityToOrder(changedOrderEntity, products);
     }
 
     public boolean removeOrder(Order order) {
-        productRepository.deleteProductsForOrder(order.getId());
-        int numberOfOrderProducts = productRepository.countOrderProductsByOrderId(order.getId());
+        orderWithProductsRepository.deleteProductsForOrder(order.getId());
+        int numberOfOrderProducts = orderWithProductsRepository.countOrderProductsByOrderId(order.getId());
         orderRepository.deleteById(order.getId());
         boolean present = orderRepository.findById(order.getId()).isPresent();
         return (numberOfOrderProducts == 0) && !present;

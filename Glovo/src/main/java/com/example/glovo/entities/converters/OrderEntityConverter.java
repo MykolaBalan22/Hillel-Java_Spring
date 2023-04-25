@@ -5,7 +5,6 @@ import com.example.glovo.entities.ProductEntity;
 import com.example.glovo.models.Order;
 import com.example.glovo.models.Product;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class OrderEntityConverter {
@@ -20,7 +19,8 @@ public class OrderEntityConverter {
                 .products(products)
                 .build();
     }
-    public static OrderEntity orderToOrderEntity(Order order){
+
+    public static OrderEntity orderToOrderEntity(Order order) {
         return OrderEntity.builder()
                 .id(order.getId())
                 .date(order.getDate())
