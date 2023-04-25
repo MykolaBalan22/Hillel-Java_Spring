@@ -16,9 +16,15 @@ public interface ProductDataRepository extends CrudRepository<ProductEntity,Inte
     @Query("delete from  order_products where prod_id=:Id")
     @Modifying
     void deleteCertainProduct(@Param("Id")int id);
+    @Query("delete from  order_products where order_id=:Id")
+    @Modifying
+    void deleteProductsForOrder(@Param("Id")int id);
 
     @Query("select count(*) from order_products where prod_id=:Id")
     int countProductsByIdInOrderWithProducts(@Param("Id")int id);
+
+    @Query("select count(*) from order_products where order_id=:Id")
+    int countOrderProductsByOrderId(@Param("Id")int id);
     @Query("select products.id ,products.name ,products.cost from products inner join order_products on id=prod_id where order_id=:Id")
     List<ProductEntity> getProductEntityByCertainOrder(@Param("Id")int id);
 

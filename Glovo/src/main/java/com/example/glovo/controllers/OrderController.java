@@ -37,9 +37,9 @@ public class OrderController {
 //        return service.updateOrder(order);
 //    }
 //
-//    @DeleteMapping
-//    public boolean deleteOrder(@RequestBody Order order) {
-//        return service.removeOrder(order);
-//    }
+    @DeleteMapping
+    public boolean deleteOrder(@RequestBody Order order) {
+        return service.removeOrder(order);
+    }
 
 }

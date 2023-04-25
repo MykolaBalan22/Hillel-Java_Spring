@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -54,16 +55,19 @@ public class OrderService {
         List<ProductEntity> products = productRepository.getProductEntityByCertainOrder(entity.getId());
         return OrderEntityConverter.orderEntityToOrder(entity, products);
     }
-//
+
+    //
 //    public Order updateOrder(Order order) {
 //        Order updatedOrder = orderRepository.update(order);
 //        updatedOrder.setProducts(productRepository.updateProductsByCertainOrder(order.getId() ,order.getProducts().stream().map(Product::getId).toList()));
 //        return updatedOrder;
 //    }
 //
-//    public boolean removeOrder(Order order) {
-//        boolean deletedInAllOrdersWithProducts = orderRepository.removeOrderWithProducts(order.getId());
-//        boolean deletedInOrders = orderRepository.remove(order.getId());
-//        return deletedInOrders && deletedInAllOrdersWithProducts;
-//    }
+    public boolean removeOrder(Order order) {
+        productRepository.deleteProductsForOrder(order.getId());
+        int numberOfOrderProducts = productRepository.countOrderProductsByOrderId(order.getId());
+        orderRepository.deleteById(order.getId());
+        boolean present = orderRepository.findById(order.getId()).isPresent();
+        return (numberOfOrderProducts==0)&&!present;
+    }
 }
