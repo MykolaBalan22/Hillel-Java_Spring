@@ -26,11 +26,11 @@ public class OrderController {
     public List<Order> getOrderList() {
         return service.getAllOrders();
     }
-//
-//    @PostMapping
-//    public Order insertNewOrder(@RequestBody Order order) {
-//        return service.addOrder(order);
-//    }
+
+    @PostMapping
+    public Order insertNewOrder(@RequestBody Order order) {
+        return service.addOrder(order);
+    }
 //
 //    @PutMapping
 //    public Order changeOrder(@RequestBody Order order) {
