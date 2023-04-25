@@ -56,18 +56,21 @@ public class OrderService {
         return OrderEntityConverter.orderEntityToOrder(entity, products);
     }
 
-    //
-//    public Order updateOrder(Order order) {
-//        Order updatedOrder = orderRepository.update(order);
-//        updatedOrder.setProducts(productRepository.updateProductsByCertainOrder(order.getId() ,order.getProducts().stream().map(Product::getId).toList()));
-//        return updatedOrder;
-//    }
-//
+    public Order updateOrder(Order order) {
+        OrderEntity changedOrderEntity = orderRepository.save(OrderEntityConverter.orderToOrderEntity(order));
+        productRepository.deleteProductsForOrder(order.getId());
+        for (Product product : order.getProducts()) {
+            productRepository.addProductByOrder(order.getId(), product.getId(), LocalDate.now());
+        }
+        List<ProductEntity> products = productRepository.getProductEntityByCertainOrder(order.getId());
+        return OrderEntityConverter.orderEntityToOrder(changedOrderEntity, products);
+    }
+
     public boolean removeOrder(Order order) {
         productRepository.deleteProductsForOrder(order.getId());
         int numberOfOrderProducts = productRepository.countOrderProductsByOrderId(order.getId());
         orderRepository.deleteById(order.getId());
         boolean present = orderRepository.findById(order.getId()).isPresent();
-        return (numberOfOrderProducts==0)&&!present;
+        return (numberOfOrderProducts == 0) && !present;
     }
 }
