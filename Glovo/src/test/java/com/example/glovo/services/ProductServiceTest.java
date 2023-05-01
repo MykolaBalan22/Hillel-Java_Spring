@@ -39,7 +39,7 @@ public class ProductServiceTest {
 
     @Test
     public void getProductByIdExceptionTest() {
-        Mockito.doThrow(ResponseStatusException.class).when(productRepository).findById(-23);
+        Mockito.doReturn(Optional.ofNullable(null)).when(productRepository).findById(-23);
         Assertions.assertThrows(ResponseStatusException.class, () -> productService.getProductById(-23));
     }
 

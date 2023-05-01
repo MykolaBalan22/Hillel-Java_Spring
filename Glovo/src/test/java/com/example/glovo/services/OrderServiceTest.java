@@ -56,7 +56,7 @@ public class OrderServiceTest {
 
     @Test
     public void getOrderByIdExceptionTest() {
-        Mockito.doThrow(ResponseStatusException.class).when(orderRepository).findById(-23);
+        Mockito.doReturn(Optional.ofNullable(null)).when(orderRepository).findById(-23);
         Assertions.assertThrows(ResponseStatusException.class, () -> orderService.getOrderById(-23));
     }
 
