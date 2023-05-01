@@ -47,18 +47,23 @@ public class ProductServiceTest {
     public void addProductTest() {
         Mockito.when(productRepository.save(productEntity)).thenReturn(productEntity);
         Product actual = productService.addProduct(expected);
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
     public void changeProductTest() {
         Mockito.when(productRepository.save(productEntity)).thenReturn(productEntity);
         Product actual = productService.changeProduct(expected);
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
     public void removeProductTest() {
-
+        Mockito.doReturn(0).when(orderWithProductsRepository).countProductsByIdInOrderWithProducts(expected.getId());
+        Mockito.doReturn(false).when(productRepository).existsById(expected.getId());
+        boolean actual = productService.removeProduct(expected);
+        Mockito.verify(orderWithProductsRepository, Mockito.times(1)).deleteCertainProduct(expected.getId());
+        Mockito.verify(productRepository, Mockito.times(1)).deleteById(expected.getId());
+        Assertions.assertTrue(actual);
     }
 }
