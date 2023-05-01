@@ -86,6 +86,12 @@ public class OrderServiceTest {
 
     @Test
     public void removeOrder() {
+        Mockito.doReturn(1).when(orderWithProductsRepository).countOrderProductsByOrderId(23);
+        Mockito.doReturn(Optional.ofNullable(null)).when(orderRepository).findById(23);
+        boolean actual = orderService.removeOrder(expected);
 
+        Mockito.verify(orderWithProductsRepository).deleteProductsForOrder(23);
+        Mockito.verify(orderRepository).deleteById(23);
+        Assertions.assertFalse(actual);
     }
 }
