@@ -4,13 +4,16 @@ import com.example.glovo.entities.ProductEntity;
 import com.example.glovo.models.Product;
 import com.example.glovo.repositories.OrderWithProductsRepository;
 import com.example.glovo.repositories.ProductDataRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
@@ -19,19 +22,25 @@ public class ProductServiceTest {
     private ProductService productService;
     private Product expected;
     private ProductEntity productEntity;
+
     @BeforeEach
-    public void init(){
-        this.productService =new ProductService(productRepository,orderWithProductsRepository);
-        this.expected =Product.builder().id(23).cost(34.5).name("Apple").dateOfPull(LocalDate.now()).build();
-        this.productEntity=ProductEntity.builder().id(23).cost(34.5).name("Apple").build();
+    public void init() {
+        this.productService = new ProductService(productRepository, orderWithProductsRepository);
+        this.expected = Product.builder().id(23).cost(34.5).name("Apple").dateOfPull(LocalDate.now()).build();
+        this.productEntity = ProductEntity.builder().id(23).cost(34.5).name("Apple").build();
     }
+
     @Test
     public void getProductByIdTest() {
-
+        Mockito.doReturn(Optional.ofNullable(productEntity)).when(productRepository).findById(23);
+        Product actual = productService.getProductById(23);
+        Assertions.assertEquals(expected, actual);
     }
+
     @Test
     public void getProductByIdExceptionTest() {
-
+        Mockito.doThrow(ResponseStatusException.class).when(productRepository).findById(-23);
+        Assertions.assertThrows(ResponseStatusException.class,()->productService.getProductById(-23));
     }
 
     @Test
