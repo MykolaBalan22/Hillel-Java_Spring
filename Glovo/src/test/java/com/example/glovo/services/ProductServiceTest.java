@@ -17,8 +17,8 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
-    private ProductDataRepository productRepository = Mockito.mock(ProductDataRepository.class);
-    private OrderWithProductsRepository orderWithProductsRepository = Mockito.mock(OrderWithProductsRepository.class);
+    private final ProductDataRepository productRepository = Mockito.mock(ProductDataRepository.class);
+    private final OrderWithProductsRepository orderWithProductsRepository = Mockito.mock(OrderWithProductsRepository.class);
     private ProductService productService;
     private Product expected;
     private ProductEntity productEntity;
@@ -40,12 +40,14 @@ public class ProductServiceTest {
     @Test
     public void getProductByIdExceptionTest() {
         Mockito.doThrow(ResponseStatusException.class).when(productRepository).findById(-23);
-        Assertions.assertThrows(ResponseStatusException.class,()->productService.getProductById(-23));
+        Assertions.assertThrows(ResponseStatusException.class, () -> productService.getProductById(-23));
     }
 
     @Test
     public void addProductTest() {
-
+        Mockito.when(productRepository.save(productEntity)).thenReturn(productEntity);
+        Product actual = productService.addProduct(expected);
+        Assertions.assertEquals(expected,actual);
     }
 
     @Test
