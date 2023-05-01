@@ -19,8 +19,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceTest {
@@ -60,24 +65,42 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getOrderByIdExeptionTest() {
+    public void getOrderByIdExсeptionTest() {
         OrderService orderService = new OrderService(orderRepository, orderWithProductsRepository, productDataRepository);
         Mockito.doThrow(ResponseStatusException.class).when(orderRepository).findById(-23);
         Assertions.assertThrows(ResponseStatusException.class, () -> orderService.getOrderById(-23));
     }
 
-    @Test
-    public void getAllOrders() {
-
-    }
 
     @Test
     public void addOrder() {
+        OrderService orderService = new OrderService(orderRepository, orderWithProductsRepository, productDataRepository);
+        List<Product> products = List.of(Product.builder().id(3).name("Apple").cost(4.6).dateOfPull(LocalDate.now()).build());
+        List<ProductEntity> productEntities = List.of(ProductEntity.builder().id(3).name("Apple").cost(4.6).build());
+        Order expected = Order.builder().id(23).date(LocalDate.now()).cost(34.5).products(products).build();
+        OrderEntity orderEntity =OrderEntity.builder().id(23).date(LocalDate.now()).cost(34.5).build();
 
+        Mockito.when(orderRepository.save(Mockito.any(OrderEntity.class))).thenReturn(orderEntity);
+        Mockito.doReturn(productEntities).when(productDataRepository).getProductEntityByCertainOrder(23);
+
+        Order actual = orderService.addOrder(expected);
+        Mockito.verify(orderWithProductsRepository,Mockito.times(1)).addProductByOrder(23,3,LocalDate.now());
+        Assertions.assertEquals(expected ,actual);
     }
 
     @Test
     public void updateOrder() {
+        OrderService orderService = new OrderService(orderRepository, orderWithProductsRepository, productDataRepository);
+        List<Product> products = List.of(Product.builder().id(3).name("Apple").cost(4.6).dateOfPull(LocalDate.now()).build());
+        Order expected = Order.builder().id(23).date(LocalDate.now()).cost(34.5).products(products).build();
+        OrderEntity orderEntity =OrderEntity.builder().id(23).date(LocalDate.now()).cost(34.5).build();
+
+        Mockito.when(orderRepository.save(Mockito.any(OrderEntity.class))).thenReturn(orderEntity);
+        Mockito.when(productDataRepository)
+
+        Order actual = orderService.updateOrder(expected);
+        Mockito.verify(orderWithProductsRepository,Mockito.times(1)).addProductByOrder(23,3,LocalDate.now());
+        Assertions.assertEquals(expected ,actual);
 
     }
 

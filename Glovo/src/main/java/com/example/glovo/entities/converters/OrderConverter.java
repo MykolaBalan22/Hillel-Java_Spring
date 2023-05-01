@@ -7,10 +7,10 @@ import com.example.glovo.models.Product;
 
 import java.util.List;
 
-public class OrderEntityConverter {
+public class OrderConverter {
     public static Order orderEntityToOrder(OrderEntity entity, List<ProductEntity> productEntities) {
         List<Product> products = productEntities.stream()
-                .map(ProductEntityConverter::productEntityToProduct)
+                .map(ProductConverter::productEntityToProduct)
                 .toList();
         return Order.builder()
                 .id(entity.getId())

@@ -1,7 +1,7 @@
 package com.example.glovo.services;
 
 import com.example.glovo.entities.ProductEntity;
-import com.example.glovo.entities.converters.ProductEntityConverter;
+import com.example.glovo.entities.converters.ProductConverter;
 import com.example.glovo.models.Product;
 import com.example.glovo.repositories.OrderWithProductsRepository;
 import com.example.glovo.repositories.ProductDataRepository;
@@ -23,17 +23,17 @@ public class ProductService {
 
     public Product getProductById(int id) {
         ProductEntity entity = productRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found"));
-        return ProductEntityConverter.productEntityToProduct(entity);
+        return ProductConverter.productEntityToProduct(entity);
     }
 
     public Product addProduct(Product product) {
-        ProductEntity entity = productRepository.save(ProductEntityConverter.productToProductEntity(product));
-        return ProductEntityConverter.productEntityToProduct(entity);
+        ProductEntity entity = productRepository.save(ProductConverter.productToProductEntity(product));
+        return ProductConverter.productEntityToProduct(entity);
     }
 
     public Product changeProduct(Product product) {
-        ProductEntity entity = productRepository.save(ProductEntityConverter.productToProductEntity(product));
-        return ProductEntityConverter.productEntityToProduct(entity);
+        ProductEntity entity = productRepository.save(ProductConverter.productToProductEntity(product));
+        return ProductConverter.productEntityToProduct(entity);
     }
 
     public boolean removeProduct(Product product) {
