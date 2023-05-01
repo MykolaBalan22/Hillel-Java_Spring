@@ -52,7 +52,9 @@ public class ProductServiceTest {
 
     @Test
     public void changeProductTest() {
-
+        Mockito.when(productRepository.save(productEntity)).thenReturn(productEntity);
+        Product actual = productService.changeProduct(expected);
+        Assertions.assertEquals(expected,actual);
     }
 
     @Test
