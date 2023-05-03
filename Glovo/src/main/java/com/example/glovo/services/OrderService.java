@@ -2,7 +2,7 @@ package com.example.glovo.services;
 
 import com.example.glovo.entities.OrderEntity;
 import com.example.glovo.entities.ProductEntity;
-import com.example.glovo.entities.converters.OrderEntityConverter;
+import com.example.glovo.entities.converters.OrderConverter;
 import com.example.glovo.models.Order;
 import com.example.glovo.models.Product;
 import com.example.glovo.repositories.OrderDataRepository;
@@ -34,7 +34,7 @@ public class OrderService {
     public Order getOrderById(int id) {
         OrderEntity entity = orderRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found"));
-        return OrderEntityConverter.orderEntityToOrder(entity, productRepository.getProductEntityByCertainOrder(id));
+        return OrderConverter.orderEntityToOrder(entity, productRepository.getProductEntityByCertainOrder(id));
     }
 
     public List<Order> getAllOrders() {
@@ -42,28 +42,28 @@ public class OrderService {
         List<Order> orders = new ArrayList<>();
         while (iterator.hasNext()) {
             OrderEntity entity = iterator.next();
-            orders.add(OrderEntityConverter.orderEntityToOrder(entity, productRepository.getProductEntityByCertainOrder(entity.getId())));
+            orders.add(OrderConverter.orderEntityToOrder(entity, productRepository.getProductEntityByCertainOrder(entity.getId())));
         }
         return orders;
     }
 
     public Order addOrder(Order order) {
-        OrderEntity entity = orderRepository.save(OrderEntityConverter.orderToOrderEntity(order));
+        OrderEntity entity = orderRepository.save(OrderConverter.orderToOrderEntity(order));
         for (Product product : order.getProducts()) {
             orderWithProductsRepository.addProductByOrder(entity.getId(), product.getId(), LocalDate.now());
         }
         List<ProductEntity> products = productRepository.getProductEntityByCertainOrder(entity.getId());
-        return OrderEntityConverter.orderEntityToOrder(entity, products);
+        return OrderConverter.orderEntityToOrder(entity, products);
     }
 
     public Order updateOrder(Order order) {
-        OrderEntity changedOrderEntity = orderRepository.save(OrderEntityConverter.orderToOrderEntity(order));
+        OrderEntity changedOrderEntity = orderRepository.save(OrderConverter.orderToOrderEntity(order));
         orderWithProductsRepository.deleteProductsForOrder(order.getId());
         for (Product product : order.getProducts()) {
             orderWithProductsRepository.addProductByOrder(order.getId(), product.getId(), LocalDate.now());
         }
         List<ProductEntity> products = productRepository.getProductEntityByCertainOrder(order.getId());
-        return OrderEntityConverter.orderEntityToOrder(changedOrderEntity, products);
+        return OrderConverter.orderEntityToOrder(changedOrderEntity, products);
     }
 
     public boolean removeOrder(Order order) {

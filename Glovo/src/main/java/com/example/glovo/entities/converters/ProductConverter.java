@@ -4,7 +4,7 @@ import com.example.glovo.entities.ProductEntity;
 import com.example.glovo.models.Product;
 import java.time.LocalDate;
 
-public class ProductEntityConverter {
+public class ProductConverter {
 
     public static Product productEntityToProduct(ProductEntity entity) {
         return Product.builder()
