@@ -20,7 +20,7 @@ public class SecurityConfiguration {
         http
                 .formLogin(formLogin -> formLogin.permitAll())
                 .authorizeRequests(authorizeRequests -> authorizeRequests.requestMatchers("/orders").hasRole("ADMIN")
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .logout().permitAll();
         return http.build();
     }
